@@ -52,6 +52,8 @@ project.eslint?.addRules({
   ],
 });
 
-// project.postCompileTask.exec('cp node_modules/@aws-cdk/aws-service-spec/db.json.gz db.json.gz');
+project.postCompileTask.exec(
+  'cp node_modules/@aws-cdk/aws-service-spec/db.json.gz dist/db.json.gz'
+);
 
 project.synth();
