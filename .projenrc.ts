@@ -52,8 +52,7 @@ project.eslint?.addRules({
   ],
 });
 
-project.postCompileTask.exec(
-  'cp node_modules/@aws-cdk/aws-service-spec/db.json.gz dist/db.json.gz'
-);
+// Copy database file to root for GitHub Actions
+project.postCompileTask.exec('cp node_modules/@aws-cdk/aws-service-spec/db.json.gz .');
 
 project.synth();
