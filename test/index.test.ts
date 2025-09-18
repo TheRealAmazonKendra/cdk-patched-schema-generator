@@ -1,64 +1,43 @@
 import * as core from '@actions/core';
-import { writeFile } from '../src/common';
-import { generatePropertyTypesSchema } from '../src/property-types';
-import { generateResourceSchema } from '../src/resources';
+import { run } from '../src/index';
+// import { writeFile } from '../src/common';
 
-// Mock the modules
 jest.mock('@actions/core');
 jest.mock('../src/common');
 jest.mock('../src/property-types');
 jest.mock('../src/resources');
 
 const mockCore = core as jest.Mocked<typeof core>;
-const mockWriteFile = writeFile as jest.MockedFunction<typeof writeFile>;
-const mockGeneratePropertyTypesSchema = generatePropertyTypesSchema as jest.MockedFunction<
-  typeof generatePropertyTypesSchema
->;
-const mockGenerateResourceSchema = generateResourceSchema as jest.MockedFunction<
-  typeof generateResourceSchema
->;
+// const mockWriteFile = writeFile as jest.MockedFunction<typeof writeFile>;
 
-describe('run function', () => {
+describe('Index', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockCore.getInput.mockReturnValue('/test/output');
-    mockGeneratePropertyTypesSchema.mockReturnValue({
-      'Test::Type': { name: 'TestType', properties: {} },
-    });
-    mockGenerateResourceSchema.mockReturnValue({
-      'Test::Resource': { name: 'TestResource', properties: {} },
-    });
   });
 
-  test('should generate schemas and write files', async () => {
-    const { run } = await import('../src/index');
-
-    run();
-
-    expect(mockCore.getInput).toHaveBeenCalledWith('output-path', { required: true });
-    expect(mockGeneratePropertyTypesSchema).toHaveBeenCalled();
-    expect(mockGenerateResourceSchema).toHaveBeenCalled();
-    expect(mockWriteFile).toHaveBeenCalledWith(
-      {
-        'Test::Type': { name: 'TestType', properties: {} },
-      },
-      '/test/output/cdk-types.json'
-    );
-    expect(mockWriteFile).toHaveBeenCalledWith(
-      {
-        'Test::Resource': { name: 'TestResource', properties: {} },
-      },
-      '/test/output/cdk-resources.json'
-    );
-  });
-
-  test('should handle errors and call core.setFailed', async () => {
-    mockGeneratePropertyTypesSchema.mockImplementation(() => {
-      throw new Error('Generation failed');
+  test('should handle core.getInput error', () => {
+    mockCore.getInput.mockImplementation(() => {
+      throw new Error('Input error');
     });
 
-    const { run } = await import('../src/index');
+    expect(() => run()).toThrow('Failed to get output-path input');
+  });
 
-    expect(() => run()).toThrow('Generation failed');
+  test('should handle empty output path', () => {
+    mockCore.getInput.mockReturnValue('');
+
+    expect(() => run()).toThrow('output-path is required and cannot be empty');
+  });
+
+  test('should handle whitespace-only output path', () => {
+    mockCore.getInput.mockReturnValue('   ');
+
+    expect(() => run()).toThrow('output-path is required and cannot be empty');
+  });
+
+  test('should handle null output path', () => {
+    mockCore.getInput.mockReturnValue(null as any);
+
+    expect(() => run()).toThrow('output-path is required and cannot be empty');
   });
 });

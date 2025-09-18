@@ -22,6 +22,13 @@ export interface ResourceType {
   name: string;
   attributes?: Record<string, PropertyInfo>;
   properties: Record<string, PropertyInfo>;
+  construct?: {
+    typescript: { module: string; name: string };
+    csharp: { namespace: string; name: string };
+    golang: { module: string; package: string; name: string };
+    java: { package: string; name: string };
+    python: { module: string; name: string };
+  };
 }
 
 const fill = (
@@ -35,7 +42,7 @@ const fill = (
       const required = isAttribute ? undefined : 'required' in item ? item.required : undefined;
 
       acc[id] = {
-        name: `${isAttribute ? 'attr' : ''}${id}`,
+        name: id,
         valueType: type.type,
         required,
       };

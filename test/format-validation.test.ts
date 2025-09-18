@@ -111,10 +111,66 @@ describe('Output Format Validation', () => {
       expect(resource).toHaveProperty('name');
       expect(resource).toHaveProperty('attributes');
       expect(resource).toHaveProperty('properties');
+      expect(resource).toHaveProperty('construct');
 
       expect(typeof resource.name).toBe('string');
       expect(typeof resource.attributes).toBe('object');
       expect(typeof resource.properties).toBe('object');
+      expect(typeof resource.construct).toBe('object');
+    });
+
+    test('should have valid construct imports for all languages', () => {
+      Object.entries(resourceSchema).forEach(([, resource]) => {
+        const construct = resource.construct!;
+
+        // TypeScript
+        expect(construct.typescript).toHaveProperty('module');
+        expect(construct.typescript).toHaveProperty('name');
+        expect(construct.typescript.name).toBe(resource.name);
+        expect(construct.typescript.module).toMatch(/^aws-cdk-lib\/aws-/);
+
+        // C#
+        expect(construct.csharp).toHaveProperty('namespace');
+        expect(construct.csharp).toHaveProperty('name');
+        expect(construct.csharp.name).toBe(resource.name);
+        expect(construct.csharp.namespace).toMatch(/^Amazon\.CDK\.AWS\.[A-Z0-9]+$/);
+
+        // Go
+        expect(construct.golang).toHaveProperty('module');
+        expect(construct.golang).toHaveProperty('package');
+        expect(construct.golang).toHaveProperty('name');
+        expect(construct.golang.name).toBe(resource.name);
+        expect(construct.golang.module).toMatch(/^github\.com\/aws\/aws-cdk-go\/awscdk\/v2\/aws/);
+        expect(construct.golang.package).toMatch(/^[a-z0-9]+$/);
+
+        // Java
+        expect(construct.java).toHaveProperty('package');
+        expect(construct.java).toHaveProperty('name');
+        expect(construct.java.name).toBe(resource.name);
+        expect(construct.java.package).toMatch(/^software\.amazon\.awscdk\.services\.[a-z0-9]+$/);
+
+        // Python
+        expect(construct.python).toHaveProperty('module');
+        expect(construct.python).toHaveProperty('name');
+        expect(construct.python.name).toBe(resource.name);
+        expect(construct.python.module).toMatch(/^aws_cdk\.aws_[a-z0-9]+$/);
+      });
+    });
+
+    test('should have consistent service names across languages', () => {
+      Object.entries(resourceSchema).forEach(([cloudFormationType, resource]) => {
+        const serviceName = cloudFormationType.split('::')[1].toLowerCase();
+        const construct = resource.construct!;
+
+        expect(construct.typescript.module).toBe(`aws-cdk-lib/aws-${serviceName}`);
+        expect(construct.csharp.namespace).toBe(`Amazon.CDK.AWS.${serviceName.toUpperCase()}`);
+        expect(construct.golang.module).toBe(
+          `github.com/aws/aws-cdk-go/awscdk/v2/aws${serviceName}`
+        );
+        expect(construct.golang.package).toBe(serviceName);
+        expect(construct.java.package).toBe(`software.amazon.awscdk.services.${serviceName}`);
+        expect(construct.python.module).toBe(`aws_cdk.aws_${serviceName}`);
+      });
     });
 
     test('should have sorted attribute and property keys within each resource', () => {
@@ -170,11 +226,6 @@ describe('Output Format Validation', () => {
 
         // Resource names should start with Cfn
         expect(resource.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
-
-        // Attribute names should start with attr
-        Object.values(resource.attributes || {}).forEach((attribute: any) => {
-          expect(attribute.name).toMatch(/^attr[A-Za-z0-9.]+$/);
-        });
       });
     });
   });
