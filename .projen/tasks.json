@@ -140,7 +140,7 @@
       "description": "Creates the distribution package",
       "steps": [
         {
-          "exec": "ncc build --source-map --license licenses.txt --asset db.json.gz"
+          "exec": "ncc build --source-map --license licenses.txt"
         }
       ]
     },
@@ -158,7 +158,12 @@
     },
     "post-upgrade": {
       "name": "post-upgrade",
-      "description": "Runs after upgrading dependencies"
+      "description": "Runs after upgrading dependencies",
+      "steps": [
+        {
+          "exec": "cp node_modules/@aws-cdk/aws-service-spec/db.json.gz ."
+        }
+      ]
     },
     "pre-compile": {
       "name": "pre-compile",
