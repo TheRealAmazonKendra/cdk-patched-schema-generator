@@ -9,9 +9,6 @@ export const generateResourceSchema = (): TypeMap => {
     const serviceName = cloudFormationType.split('::')[1].toLowerCase();
 
     resourceTypes[cloudFormationType] = {
-      name: `Cfn${resource.name}`,
-      attributes: fillAttributes(resource.attributes, cloudFormationType),
-      properties: fillProperties(resource.properties, cloudFormationType),
       construct: {
         typescript: {
           module: `aws-cdk-lib/aws-${serviceName}`,
@@ -35,6 +32,8 @@ export const generateResourceSchema = (): TypeMap => {
           name: `Cfn${resource.name}`,
         },
       },
+      attributes: fillAttributes(resource.attributes, cloudFormationType),
+      properties: fillProperties(resource.properties, cloudFormationType),
     };
   }
 

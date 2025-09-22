@@ -4,6 +4,9 @@ const project = new GitHubActionTypeScriptProject({
   devDeps: ['projen-github-action-typescript', '@types/fs-extra'],
   name: 'cdk-patched-schema-generator',
   projenrcTs: true,
+  depsUpgradeOptions: {
+    workflow: false,
+  },
   deps: [
     '@octokit/graphql',
     '@actions/core',
@@ -52,7 +55,9 @@ project.eslint?.addRules({
   ],
 });
 
-// Copy database file to root for GitHub Actions
-project.postCompileTask.exec('cp node_modules/@aws-cdk/aws-service-spec/db.json.gz .');
+// Copy updated database file during upgrades
+project.tasks
+  .tryFind('post-upgrade')
+  ?.exec('cp node_modules/@aws-cdk/aws-service-spec/db.json.gz .');
 
 project.synth();

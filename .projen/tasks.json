@@ -146,16 +146,16 @@
     },
     "post-compile": {
       "name": "post-compile",
-      "description": "Runs after successful compilation",
+      "description": "Runs after successful compilation"
+    },
+    "post-upgrade": {
+      "name": "post-upgrade",
+      "description": "Runs after upgrading dependencies",
       "steps": [
         {
           "exec": "cp node_modules/@aws-cdk/aws-service-spec/db.json.gz ."
         }
       ]
-    },
-    "post-upgrade": {
-      "name": "post-upgrade",
-      "description": "Runs after upgrading dependencies"
     },
     "pre-compile": {
       "name": "pre-compile",
