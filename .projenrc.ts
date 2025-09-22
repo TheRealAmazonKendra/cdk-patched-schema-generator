@@ -4,6 +4,9 @@ const project = new GitHubActionTypeScriptProject({
   devDeps: ['projen-github-action-typescript', '@types/fs-extra'],
   name: 'cdk-patched-schema-generator',
   projenrcTs: true,
+  depsUpgradeOptions: {
+    workflow: false,
+  },
   deps: [
     '@octokit/graphql',
     '@actions/core',
