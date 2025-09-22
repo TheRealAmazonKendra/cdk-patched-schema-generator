@@ -19,9 +19,6 @@ export interface PropertyInfo {
 }
 
 export interface ResourceType {
-  name: string;
-  attributes?: Record<string, PropertyInfo>;
-  properties: Record<string, PropertyInfo>;
   construct?: {
     typescript: { module: string; name: string };
     csharp: { namespace: string; name: string };
@@ -29,6 +26,8 @@ export interface ResourceType {
     java: { package: string; name: string };
     python: { module: string; name: string };
   };
+  attributes?: Record<string, PropertyInfo>;
+  properties: Record<string, PropertyInfo>;
 }
 
 const fill = (
@@ -41,11 +40,14 @@ const fill = (
       const type = TypeDecider.getType(cloudFormationType, item.type, item.previousTypes);
       const required = isAttribute ? undefined : 'required' in item ? item.required : undefined;
 
-      acc[id] = {
+      const propertyInfo: any = {
         name: id,
         valueType: type.type,
-        required,
       };
+      if (required !== undefined) {
+        propertyInfo.required = required;
+      }
+      acc[id] = propertyInfo;
       return acc;
     },
     {} as Record<string, any>

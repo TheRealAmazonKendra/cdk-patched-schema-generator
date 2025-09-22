@@ -31,7 +31,9 @@ export class TypeDecider {
         return { primitive: PrimitiveType.DateTime };
       case 'ref':
         const referenceTypeName = getTypeDefinition(propertyType);
-        return { named: `${cloudFormationType}.${referenceTypeName}` };
+        // Remove 'Property' suffix from reference name for the named type
+        const cleanTypeName = referenceTypeName.replace(/Property$/, '');
+        return { named: `${cloudFormationType}.${cleanTypeName}` };
       case 'array':
         const elementType = this.doGetType(propertyType.element, cloudFormationType);
         return { listOf: elementType };

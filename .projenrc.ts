@@ -55,4 +55,15 @@ project.eslint?.addRules({
 // Copy database file to root for GitHub Actions
 project.postCompileTask.exec('cp node_modules/@aws-cdk/aws-service-spec/db.json.gz .');
 
+// TODO: Remove
+project.postCompileTask.exec(
+  "node -e \"const { generatePropertyTypesSchema } = require('./lib/property-types'); const { generateResourceSchema } = require('./lib/resources'); const fs = require('fs'); const propertyTypes = generatePropertyTypesSchema(); const resources = generateResourceSchema(); fs.writeFileSync('cdk-types.json', JSON.stringify(propertyTypes, null, 2)); fs.writeFileSync('cdk-resources.json', JSON.stringify(resources, null, 2)); console.log('Generated cdk-types.json and cdk-resources.json');\""
+);
+
+// Add compile and package steps to post-upgrade task
+// Skip test step so that the action succeeds but the PR will fail
+// if there are any issues with the upgrade.
+project.tasks.tryFind('post-upgrade')?.exec('npx projen compile');
+project.tasks.tryFind('post-upgrade')?.exec('npx projen package');
+
 project.synth();

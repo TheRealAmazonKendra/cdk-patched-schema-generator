@@ -25,21 +25,11 @@ describe('Output Format Validation', () => {
 
     test('should have CfnTag property type', () => {
       expect(propertyTypesSchema).toHaveProperty('CfnTag');
-      expect(propertyTypesSchema.CfnTag).toEqual({
-        name: 'CfnTag',
-        properties: {
-          Key: {
-            name: 'Key',
-            valueType: { primitive: 'string' },
-            required: true,
-          },
-          Value: {
-            name: 'Value',
-            valueType: { primitive: 'string' },
-            required: true,
-          },
-        },
-      });
+      expect(propertyTypesSchema.CfnTag).toHaveProperty('name');
+      expect(propertyTypesSchema.CfnTag).toHaveProperty('properties');
+      expect((propertyTypesSchema.CfnTag as any).name.typescript.name).toBe('CfnTag');
+      expect(propertyTypesSchema.CfnTag.properties.Key.required).toBe(true);
+      expect(propertyTypesSchema.CfnTag.properties.Value.required).toBe(true);
     });
 
     test('should have valid property type structure', () => {
@@ -49,8 +39,15 @@ describe('Output Format Validation', () => {
 
         expect(propertyType).toHaveProperty('name');
         expect(propertyType).toHaveProperty('properties');
-        expect(typeof propertyType.name).toBe('string');
+        expect(typeof (propertyType as any).name).toBe('object');
         expect(typeof propertyType.properties).toBe('object');
+
+        // Check construct imports structure
+        expect((propertyType as any).name).toHaveProperty('typescript');
+        expect((propertyType as any).name).toHaveProperty('csharp');
+        expect((propertyType as any).name).toHaveProperty('golang');
+        expect((propertyType as any).name).toHaveProperty('java');
+        expect((propertyType as any).name).toHaveProperty('python');
 
         // Check property structure
         const properties = Object.keys(propertyType.properties);
@@ -108,15 +105,13 @@ describe('Output Format Validation', () => {
       const sampleKey = Object.keys(resourceSchema)[0];
       const resource = resourceSchema[sampleKey];
 
-      expect(resource).toHaveProperty('name');
+      expect(resource).toHaveProperty('construct');
       expect(resource).toHaveProperty('attributes');
       expect(resource).toHaveProperty('properties');
-      expect(resource).toHaveProperty('construct');
 
-      expect(typeof resource.name).toBe('string');
+      expect(typeof resource.construct).toBe('object');
       expect(typeof resource.attributes).toBe('object');
       expect(typeof resource.properties).toBe('object');
-      expect(typeof resource.construct).toBe('object');
     });
 
     test('should have valid construct imports for all languages', () => {
@@ -126,33 +121,33 @@ describe('Output Format Validation', () => {
         // TypeScript
         expect(construct.typescript).toHaveProperty('module');
         expect(construct.typescript).toHaveProperty('name');
-        expect(construct.typescript.name).toBe(resource.name);
+        expect(construct.typescript.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
         expect(construct.typescript.module).toMatch(/^aws-cdk-lib\/aws-/);
 
         // C#
         expect(construct.csharp).toHaveProperty('namespace');
         expect(construct.csharp).toHaveProperty('name');
-        expect(construct.csharp.name).toBe(resource.name);
+        expect(construct.csharp.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
         expect(construct.csharp.namespace).toMatch(/^Amazon\.CDK\.AWS\.[A-Z0-9]+$/);
 
         // Go
         expect(construct.golang).toHaveProperty('module');
         expect(construct.golang).toHaveProperty('package');
         expect(construct.golang).toHaveProperty('name');
-        expect(construct.golang.name).toBe(resource.name);
+        expect(construct.golang.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
         expect(construct.golang.module).toMatch(/^github\.com\/aws\/aws-cdk-go\/awscdk\/v2\/aws/);
         expect(construct.golang.package).toMatch(/^[a-z0-9]+$/);
 
         // Java
         expect(construct.java).toHaveProperty('package');
         expect(construct.java).toHaveProperty('name');
-        expect(construct.java.name).toBe(resource.name);
+        expect(construct.java.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
         expect(construct.java.package).toMatch(/^software\.amazon\.awscdk\.services\.[a-z0-9]+$/);
 
         // Python
         expect(construct.python).toHaveProperty('module');
         expect(construct.python).toHaveProperty('name');
-        expect(construct.python.name).toBe(resource.name);
+        expect(construct.python.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
         expect(construct.python.module).toMatch(/^aws_cdk\.aws_[a-z0-9]+$/);
       });
     });
@@ -224,8 +219,8 @@ describe('Output Format Validation', () => {
         // Resource keys should follow AWS::Service::Resource or Alexa::Service::Resource pattern
         expect(key).toMatch(/^(AWS|Alexa)::[A-Za-z0-9]+::[A-Za-z0-9]+$/);
 
-        // Resource names should start with Cfn
-        expect(resource.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
+        // Resource construct names should start with Cfn
+        expect(resource.construct!.typescript.name).toMatch(/^Cfn[A-Za-z0-9]+$/);
       });
     });
   });
