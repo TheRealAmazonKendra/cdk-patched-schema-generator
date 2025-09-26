@@ -3651,7 +3651,7 @@ exports.loadAwsServiceSpecSync = loadAwsServiceSpecSync;
 const node_fs_1 = __nccwpck_require__(3024);
 const path = __importStar(__nccwpck_require__(6760));
 const node_zlib_1 = __nccwpck_require__(8522);
-const service_spec_types_1 = __nccwpck_require__(9444);
+const service_spec_types_1 = __nccwpck_require__(5580);
 const DB_COMPRESSED = 'db.json.gz';
 const DB_PATH = path.join(__dirname, '..', DB_COMPRESSED);
 /**
@@ -3675,7 +3675,7 @@ function loadBufferIntoDatabase(spec) {
 
 /***/ }),
 
-/***/ 9444:
+/***/ 5580:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3695,16 +3695,16 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(1681), exports);
-__exportStar(__nccwpck_require__(3652), exports);
-__exportStar(__nccwpck_require__(7343), exports);
-__exportStar(__nccwpck_require__(1491), exports);
-__exportStar(__nccwpck_require__(9663), exports);
+__exportStar(__nccwpck_require__(1705), exports);
+__exportStar(__nccwpck_require__(9260), exports);
+__exportStar(__nccwpck_require__(7719), exports);
+__exportStar(__nccwpck_require__(811), exports);
+__exportStar(__nccwpck_require__(1639), exports);
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7OztBQUFBLG1EQUFpQztBQUNqQyxtREFBaUM7QUFDakMsd0RBQXNDO0FBQ3RDLGtEQUFnQztBQUNoQywrQ0FBNkIiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgKiBmcm9tICcuL3R5cGVzL2RhdGFiYXNlJztcbmV4cG9ydCAqIGZyb20gJy4vdHlwZXMvcmVzb3VyY2UnO1xuZXhwb3J0ICogZnJvbSAnLi90eXBlcy9hdWdtZW50YXRpb25zJztcbmV4cG9ydCAqIGZyb20gJy4vdHlwZXMvbWV0cmljcyc7XG5leHBvcnQgKiBmcm9tICcuL3R5cGVzL2RpZmYnO1xuIl19
 
 /***/ }),
 
-/***/ 7343:
+/***/ 7719:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3714,7 +3714,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 1681:
+/***/ 1705:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -3804,7 +3804,7 @@ exports.RichSpecDatabase = RichSpecDatabase;
 
 /***/ }),
 
-/***/ 9663:
+/***/ 1639:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3814,7 +3814,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 1491:
+/***/ 811:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3824,14 +3824,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 3652:
+/***/ 9260:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RichPropertyType = exports.PropertyScrutinyType = exports.ResourceScrutinyType = exports.isCollectionType = exports.Deprecation = exports.RichAttribute = exports.RichProperty = exports.RichTypedField = void 0;
-const sorting_1 = __nccwpck_require__(1917);
+const sorting_1 = __nccwpck_require__(8549);
 class RichTypedField {
     constructor(field) {
         this.field = field;
@@ -4151,7 +4151,7 @@ exports.RichPropertyType = RichPropertyType;
 
 /***/ }),
 
-/***/ 1917:
+/***/ 8549:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
